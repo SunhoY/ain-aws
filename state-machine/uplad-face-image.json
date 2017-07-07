@@ -1,0 +1,21 @@
+{
+  "Comment": "Uploading face image to S3",
+  "StartAt": "UploadFaceImage",
+  "States": {
+    "UploadFaceImage": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:516159972358:function:upload-image-to-S3",
+      "Next": "AnalyzeFaceImage"
+    },
+    "AnalyzeFaceImage": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:516159972358:function:rekognize_picture",
+      "Next": "StoreAtDynamoDb"
+    },
+    "StoreAtDynamoDb": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:516159972358:function:store_face_data_at_dynamo_db",
+      "End": true
+    }
+  }
+}
