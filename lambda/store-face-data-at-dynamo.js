@@ -1,3 +1,5 @@
+'use strict';
+
 let AWS = require('aws-sdk');
 let DynamoDB = new AWS.DynamoDB();
 

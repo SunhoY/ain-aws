@@ -19,6 +19,6 @@ exports.handler = (event, context, callback) => {
             return callback(err, data);
         }
 
-        callback(null, fileNameWithExtension);
+        callback(null, {storedFileName: fileNameWithExtension});
     });
 };

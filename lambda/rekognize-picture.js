@@ -1,15 +1,20 @@
 'use strict';
 let {Rekognition} = require('aws-sdk');
 
+/**
+ * @param event JSON {fileName: {string} }
+ * @param context
+ * @param callback
+ */
+
 exports.handler = (event, context, callback) => {
-    let {s3} = event.Records[0];
-    let fileName = s3.object.key;
+    let {fileName} = event;
 
     let params = {
         Attributes: ['ALL'],
         Image: {
             S3Object: {
-                Bucket: s3.bucket.name,
+                Bucket: "ain-images",
                 Name: fileName
             }
         }

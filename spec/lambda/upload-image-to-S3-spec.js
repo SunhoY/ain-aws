@@ -84,7 +84,7 @@ describe('Upload Image to S3 Spec', () => {
                 eTag: "some tag does not matter"
             });
 
-            expect(lambdaCallback.calledWith(null, "1497798000000.jpeg")).to.be.true;
+            expect(lambdaCallback.calledWith(null, {storedFileName: "1497798000000.jpeg"})).to.be.true;
         });
     });
 });

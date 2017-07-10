@@ -7,19 +7,8 @@ describe('Rekognize Picture Spec', () => {
         handler,
         apiCallback;
 
-    const s3Event = {
-        Records: [
-            {
-                s3: {
-                    object: {
-                        key: 'object key'
-                    },
-                    bucket: {
-                        name: 'bucket name'
-                    }
-                }
-            }
-        ]
+    const event = {
+        fileName: "pretty_face.jpg"
     };
 
     beforeEach(() => {
@@ -36,7 +25,7 @@ describe('Rekognize Picture Spec', () => {
     });
 
     it('calls detectFaces api from rekognition instance', () => {
-        handler(s3Event, {}, apiCallback);
+        handler(event, {}, apiCallback);
 
         expect(detectFacesSpy.called).to.be.true;
     });
@@ -45,7 +34,7 @@ describe('Rekognize Picture Spec', () => {
         let parameters;
 
         beforeEach(() => {
-            handler(s3Event, {}, apiCallback);
+            handler(event, {}, apiCallback);
 
             parameters = detectFacesSpy.lastCall.args[0];
         });
@@ -57,8 +46,8 @@ describe('Rekognize Picture Spec', () => {
         it('has Image with S3Object', () => {
             expect(parameters.Image).to.eql({
                 S3Object: {
-                    Bucket: 'bucket name',
-                    Name: 'object key'
+                    Bucket: 'ain-images',
+                    Name: 'pretty_face.jpg'
                 }
             });
         });
@@ -68,7 +57,7 @@ describe('Rekognize Picture Spec', () => {
         let faceDetectionCallback;
 
         beforeEach(() => {
-            handler(s3Event, {}, apiCallback);
+            handler(event, {}, apiCallback);
             faceDetectionCallback = detectFacesSpy.lastCall.args[1];
         });
 
@@ -118,7 +107,7 @@ describe('Rekognize Picture Spec', () => {
 
             it('runs callback with fileName', () => {
                 expect(callbackArg.hasOwnProperty('fileName')).to.be.true;
-                expect(callbackArg.fileName).to.equal('object key');
+                expect(callbackArg.fileName).to.equal('pretty_face.jpg');
             });
 
             describe('Face Data inspection', () => {
