@@ -25,13 +25,18 @@ exports.handler = (event, context, callback) => {
         return {M: mapItem};
     }, {M: {}});
 
+    const {fileName, gender} = event;
+
     let param = {
         TableName: 'face_base',
         Item: {
             file_name: {
-                S: event.fileName
+                S: fileName
             },
-            face_data: faceData
+            face_data: faceData,
+            gender: {
+                S: gender
+            }
         }
     };
 

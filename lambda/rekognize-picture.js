@@ -31,12 +31,11 @@ function getFaceDetectionCallback(callback, fileName) {
             return callback(err, data);
         }
 
-        console.log(JSON.stringify(data));
-
-        let landmarks = data.FaceDetails[0].Landmarks;
-        let nose = landmarks.find((data) => data.Type === "nose");
-
-        let faceData = landmarks.reduce((previous, current) => {
+        const firstFaceDetail = data.FaceDetails[0];
+        const landmarks = firstFaceDetail.Landmarks;
+        const nose = landmarks.find((data) => data.Type === "nose");
+        const gender = firstFaceDetail.Gender.Value;
+        const faceData = landmarks.reduce((previous, current) => {
             if (current.Type === "nose") {
                 return previous;
             }
@@ -58,7 +57,8 @@ function getFaceDetectionCallback(callback, fileName) {
 
         callback(null, {
             fileName,
-            faceData
+            faceData,
+            gender
         });
     };
 }

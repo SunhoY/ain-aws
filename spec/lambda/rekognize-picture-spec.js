@@ -89,7 +89,11 @@ describe('Rekognize Picture Spec', () => {
                                 X: "11",
                                 Y: "15"
                             }
-                        ]
+                        ],
+                        Gender: {
+                            Value: "MALE",
+                            Confidence: 0.9
+                        }
                     }
                 ]
             };
@@ -108,6 +112,10 @@ describe('Rekognize Picture Spec', () => {
             it('runs callback with fileName', () => {
                 expect(callbackArg.hasOwnProperty('fileName')).to.be.true;
                 expect(callbackArg.fileName).to.equal('pretty_face.jpg');
+            });
+
+            it('runs callback with gender', () => {
+                expect(callbackArg.gender).to.equal("MALE");
             });
 
             describe('Face Data inspection', () => {

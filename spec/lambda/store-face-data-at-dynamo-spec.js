@@ -17,7 +17,8 @@ describe('Store Face Data at Dynamo', () => {
             type: 'rightEye',
             distance: 8.5,
             inclination: 7
-        }]
+        }],
+        gender: "MALE"
     };
 
     beforeEach(() => {
@@ -89,6 +90,10 @@ describe('Store Face Data at Dynamo', () => {
                             }
                         }
                     })
+                });
+
+                it('includes gender', () => {
+                    expect(Item.gender).to.eql({S: "MALE"});
                 });
             });
         });
