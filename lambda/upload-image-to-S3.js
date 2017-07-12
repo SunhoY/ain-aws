@@ -11,7 +11,8 @@ exports.handler = (event, context, callback) => {
     let parameters = {
         Body: Buffer.from(base64Image, "base64"),
         Bucket: "ain-images",
-        Key: fileNameWithExtension
+        Key: fileNameWithExtension,
+        ACL: 'public-read'
     };
 
     s3.putObject(parameters, (err, data) => {

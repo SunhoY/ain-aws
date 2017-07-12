@@ -58,6 +58,10 @@ describe('Upload Image to S3 Spec', () => {
         it('should have Key as file name timestamp + extension', () => {
             expect(parameter.Key).to.equal("1497798000000.jpeg");
         });
+
+        it('should have ACL as public-read', () => {
+            expect(parameter.ACL).to.equal("public-read");
+        });
     });
 
     describe('callback test', () => {
