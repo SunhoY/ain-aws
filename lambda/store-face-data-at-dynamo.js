@@ -3,29 +3,20 @@
 let AWS = require('aws-sdk');
 let DynamoDB = new AWS.DynamoDB();
 
-function createDynamoItem(faceData) {
-    let returnObject = {};
-    returnObject[faceData.type] = {
-        M: {
-            distance: {
-                S: String(faceData.distance)
-            },
-            inclination: {
-                S: String(faceData.inclination)
-            }
-        }
-    };
-    return returnObject;
-}
-
 exports.handler = (event, context, callback) => {
-    let faceData = event.faceData.reduce((previous, current) => {
-        let mapItem = Object.assign({}, previous.M, createDynamoItem(current));
+    const {fileName, gender, faceData} = event;
 
-        return {M: mapItem};
-    }, {M: {}});
+    let faceDataObject = faceData.reduce((previous, current) => {
+        let parseCurrent = {};
+        const {distance, inclination} = current;
 
-    const {fileName, gender} = event;
+        parseCurrent[current.type] = {
+            distance: distance,
+            inclination: inclination
+        };
+
+        return Object.assign({}, previous, parseCurrent);
+    }, {});
 
     let param = {
         TableName: 'face_base',
@@ -33,14 +24,12 @@ exports.handler = (event, context, callback) => {
             file_name: {
                 S: fileName
             },
-            face_data: faceData,
+            face_data: AWS.DynamoDB.Converter.input(faceDataObject),
             gender: {
                 S: gender
             }
         }
     };
-
-    console.log(JSON.stringify(param));
 
     DynamoDB.putItem(param, function (err, data) {
         if (err) {

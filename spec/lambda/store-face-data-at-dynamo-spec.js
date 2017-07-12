@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import {expect} from 'chai';
 import proxyquire from 'proxyquire';
+import AWS from 'aws-sdk';
 
 describe('Store Face Data at Dynamo', () => {
     let handler,
@@ -24,13 +25,18 @@ describe('Store Face Data at Dynamo', () => {
     beforeEach(() => {
         lambdaCallback = sinon.spy();
         putItemSpy = sinon.spy();
-        ({handler} = proxyquire('../../lambda/store-face-data-at-dynamo', {
+
+        let fakeAWS = {
             'aws-sdk': {
                 DynamoDB: function () {
                     this.putItem = putItemSpy;
                 }
             }
-        }));
+        };
+
+        fakeAWS["aws-sdk"].DynamoDB.Converter = AWS.DynamoDB.Converter;
+
+        ({handler} = proxyquire('../../lambda/store-face-data-at-dynamo', fakeAWS));
     });
 
     describe('calls putItem api from DynamoDB', () => {
@@ -71,20 +77,20 @@ describe('Store Face Data at Dynamo', () => {
                             leftEye: {
                                 M: {
                                     distance: {
-                                        S: "10.5"
+                                        N: "10.5"
                                     },
                                     inclination: {
-                                        S: "-5"
+                                        N: "-5"
                                     }
                                 }
                             },
                             rightEye: {
                                 M: {
                                     distance: {
-                                        S: "8.5"
+                                        N: "8.5"
                                     },
                                     inclination: {
-                                        S: "7"
+                                        N: "7"
                                     }
                                 }
                             }
