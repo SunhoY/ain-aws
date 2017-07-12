@@ -1,10 +1,10 @@
 'use strict';
 
 let AWS = require('aws-sdk');
-let DynamoDB = new AWS.DynamoDB();
 
 exports.handler = (event, context, callback) => {
     const {fileName, gender, faceData} = event;
+    const client = new AWS.DynamoDB.DocumentClient();
 
     let faceDataObject = faceData.reduce((previous, current) => {
         let parseCurrent = {};
@@ -21,17 +21,13 @@ exports.handler = (event, context, callback) => {
     let param = {
         TableName: 'face_base',
         Item: {
-            file_name: {
-                S: fileName
-            },
-            face_data: AWS.DynamoDB.Converter.input(faceDataObject),
-            gender: {
-                S: gender
-            }
+            file_name: fileName,
+            face_data: faceDataObject,
+            gender: gender
         }
     };
 
-    DynamoDB.putItem(param, function (err, data) {
+    client.put(param, function (err, data) {
         if (err) {
             callback(err);
         } else {

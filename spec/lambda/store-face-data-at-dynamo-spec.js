@@ -5,7 +5,7 @@ import AWS from 'aws-sdk';
 
 describe('Store Face Data at Dynamo', () => {
     let handler,
-        putItemSpy,
+        putSpy,
         lambdaCallback;
 
     const faceEvent = {
@@ -19,17 +19,19 @@ describe('Store Face Data at Dynamo', () => {
             distance: 8.5,
             inclination: 7
         }],
-        gender: "MALE"
+        gender: "Male"
     };
 
     beforeEach(() => {
         lambdaCallback = sinon.spy();
-        putItemSpy = sinon.spy();
+        putSpy = sinon.spy();
 
         let fakeAWS = {
             'aws-sdk': {
-                DynamoDB: function () {
-                    this.putItem = putItemSpy;
+                DynamoDB: {
+                    DocumentClient: function () {
+                        this.put = putSpy;
+                    }
                 }
             }
         };
@@ -46,8 +48,8 @@ describe('Store Face Data at Dynamo', () => {
         beforeEach(() => {
             handler(faceEvent, {}, lambdaCallback);
 
-            parameters = putItemSpy.lastCall.args[0];
-            putItemCallback = putItemSpy.lastCall.args[1];
+            parameters = putSpy.lastCall.args[0];
+            putItemCallback = putSpy.lastCall.args[1];
         });
 
         describe('Parameters test', () => {
@@ -65,41 +67,25 @@ describe('Store Face Data at Dynamo', () => {
 
                 it('includes file name', () => {
                     expect(Item.hasOwnProperty("file_name")).to.be.true;
-                    expect(Item.file_name).to.eql({
-                        S: "전지현.png"
-                    });
+                    expect(Item.file_name).to.equal("전지현.png");
                 });
 
                 it('includes face data', () => {
                     expect(Item.hasOwnProperty("face_data")).to.be.true;
                     expect(Item.face_data).to.eql({
-                        M: {
-                            leftEye: {
-                                M: {
-                                    distance: {
-                                        N: "10.5"
-                                    },
-                                    inclination: {
-                                        N: "-5"
-                                    }
-                                }
-                            },
-                            rightEye: {
-                                M: {
-                                    distance: {
-                                        N: "8.5"
-                                    },
-                                    inclination: {
-                                        N: "7"
-                                    }
-                                }
-                            }
+                        leftEye: {
+                            distance: 10.5,
+                            inclination: -5
+                        },
+                        rightEye: {
+                            distance: 8.5,
+                            inclination: 7
                         }
                     })
                 });
 
                 it('includes gender', () => {
-                    expect(Item.gender).to.eql({S: "MALE"});
+                    expect(Item.gender).to.eql("Male");
                 });
             });
         });
