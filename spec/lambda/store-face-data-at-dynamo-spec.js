@@ -53,9 +53,9 @@ describe('Store Face Data at Dynamo', () => {
         });
 
         describe('Parameters test', () => {
-            it('has table name "face_base"', () => {
+            it('has table name "FaceBase"', () => {
                 expect(parameters.hasOwnProperty('TableName')).to.be.true;
-                expect(parameters.TableName).to.equal('face_base');
+                expect(parameters.TableName).to.equal('FaceBase');
             });
 
             describe('Item test', () => {
@@ -66,13 +66,13 @@ describe('Store Face Data at Dynamo', () => {
                 });
 
                 it('includes file name', () => {
-                    expect(Item.hasOwnProperty("file_name")).to.be.true;
-                    expect(Item.file_name).to.equal("전지현.png");
+                    expect(Item.hasOwnProperty("fileName")).to.be.true;
+                    expect(Item.fileName).to.equal("전지현.png");
                 });
 
                 it('includes face data', () => {
-                    expect(Item.hasOwnProperty("face_data")).to.be.true;
-                    expect(Item.face_data).to.eql({
+                    expect(Item.hasOwnProperty("faceData")).to.be.true;
+                    expect(Item.faceData).to.eql({
                         leftEye: {
                             distance: 10.5,
                             inclination: -5

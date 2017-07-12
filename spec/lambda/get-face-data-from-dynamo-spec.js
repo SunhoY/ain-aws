@@ -43,10 +43,10 @@ describe('Get Face Data From DynamoDB', () => {
             parameter = scanSpy.lastCall.args[0];
         });
         
-        it('has table name as "face_base"', () => {
+        it('has table name as "FaceBase"', () => {
             const {TableName} = parameter;
 
-            expect(TableName).to.equal("face_base");
+            expect(TableName).to.equal("FaceBase");
         });
         
         it('has ExpressionAttributeValues as event.gender', () => {

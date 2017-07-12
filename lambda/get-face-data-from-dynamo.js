@@ -6,7 +6,7 @@ exports.handler = (event, context, callback) => {
     const client = new AWS.DynamoDB.DocumentClient();
 
     const parameters = {
-        TableName: "face_base",
+        TableName: "FaceBase",
         ExpressionAttributeValues: { ":gender": event.gender },
         FilterExpression: "gender = :gender"
     };

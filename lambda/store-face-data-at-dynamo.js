@@ -19,10 +19,10 @@ exports.handler = (event, context, callback) => {
     }, {});
 
     let param = {
-        TableName: 'face_base',
+        TableName: 'FaceBase',
         Item: {
-            file_name: fileName,
-            face_data: faceDataObject,
+            fileName: fileName,
+            faceData: faceDataObject,
             gender: gender
         }
     };
